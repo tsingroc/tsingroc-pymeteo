@@ -4,6 +4,7 @@ version = "0.1.0"
 description = ""
 authors = ["Jun Zhang <zhangjun@tsingroc.com>"]
 readme = "README.md"
+packages = [{include = "tsingrocpymeteo"}]
 
 [tool.poetry.dependencies]
 python = "^3.9"
