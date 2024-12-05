@@ -25,11 +25,11 @@ class Meteo:
         self._secret_key = secret_key
         self._proxies = proxies
 
-    def get(self, table: str, day_plus: Optional[int], model: str, location: Polygon, time_range: Tuple[datetime, datetime]):
+    def get(self, table: str, dayplus: Optional[int], model: str, location: Polygon, time_range: Tuple[datetime, datetime]):
         """
         Args:
         - table (str): 数据表名
-        - day_plus (Optional[int]): 日期偏移量
+        - dayplus (Optional[int]): 日期偏移量
         - model (str): 气象模型名
         - location (Polygon): 查询区域
         - time_range (Tuple[datetime, datetime]): 起止时间范围，包含起止时间
@@ -46,7 +46,7 @@ class Meteo:
         wkt_str = wkt.dumps(location)
         body = {
             "name": table,
-            "day_plus": day_plus,
+            "dayplus": dayplus,
             "model": model,
             "location": wkt_str,
             "start_t": time_range[0].astimezone().isoformat(),
