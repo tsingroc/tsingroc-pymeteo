@@ -58,6 +58,8 @@ class Meteo:
         if res.status_code != 200:
             raise Exception(f"请求失败，状态码：{res.status_code}, 原因：{res.text}")
         data = res.json()["data"]
+        if data["points"] is None:
+            data["points"] = []
         for point in data["points"]:
             ts = point["ts"]
             params = point["params"]
