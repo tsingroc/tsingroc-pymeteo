@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "tsingroc-pymeteo"
-version = "0.1.3"
+version = "0.1.4"
 description = ""
 authors = ["Jun Zhang <zhangjun@tsingroc.com>"]
 readme = "README.md"

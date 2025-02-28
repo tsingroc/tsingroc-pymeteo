@@ -42,3 +42,14 @@ print(res)
         - location (str): 坐标点的 WKT 字符串
         - data (pd.DataFrame): 查询结果
     - cost (dict): 查询耗时
+
+## 注意事项
+
+表设置为`ensemble_cn`时，返回结果中`data`对应的pandas.DataFrame中每个数据都是列表，与其他表返回结果不同，需要自行进行后续处理，如计算均值等。
+
+示例代码：
+
+```python
+df = res["points"][0]["data"]
+df = df.map(lambda x: sum(x) / len(x) if isinstance(x, list) else x)
+```

@@ -63,7 +63,8 @@ class Meteo:
         for point in data["points"]:
             ts = point["ts"]
             params = point["params"]
-            values = np.array(point["values"], dtype=np.float32).T
+            dtype = np.float32 if table != "ensemble_cn" else object
+            values = np.array(point["values"], dtype=dtype).T
             df = pd.DataFrame(values, columns=params, index=pd.to_datetime(ts))
             point["data"] = df
             del point["ts"]
