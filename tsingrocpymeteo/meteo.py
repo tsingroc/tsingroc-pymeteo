@@ -63,10 +63,20 @@ class Meteo:
         for point in data["points"]:
             ts = point["ts"]
             params = point["params"]
-            dtype = np.float32 if table != "ensemble_cn" else object
-            values = np.array(point["values"], dtype=dtype).T
-            df = pd.DataFrame(values, columns=params, index=pd.to_datetime(ts))
-            point["data"] = df
+            if table == "ensemble_cn":
+                assert len(params) == len(point["values"])
+                value_box = np.empty((len(params), len(ts)), dtype=object)
+                for i, values in enumerate(point["values"]):
+                    assert len(ts) == len(values)
+                    for j in range(len(ts)):
+                        value_box[i, j] = values[j]
+                value_box = value_box.T
+                df = pd.DataFrame(value_box, columns=params, index=pd.to_datetime(ts))
+                point["data"] = df
+            else:
+                values = np.array(point["values"], dtype=np.float32).T
+                df = pd.DataFrame(values, columns=params, index=pd.to_datetime(ts))
+                point["data"] = df
             del point["ts"]
             del point["params"]
             del point["values"]
