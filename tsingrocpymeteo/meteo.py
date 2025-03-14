@@ -11,8 +11,15 @@ from .auth import generate_aksk_authorization
 
 __all__ = ["Meteo"]
 
+
 class Meteo:
-    def __init__(self, server_url: str, access_key: str, secret_key: str, proxies: Optional[dict] = None):
+    def __init__(
+        self,
+        server_url: str,
+        access_key: str,
+        secret_key: str,
+        proxies: Optional[dict] = None,
+    ):
         """
         Args:
         - server_url (str): 服务器地址
@@ -25,7 +32,15 @@ class Meteo:
         self._secret_key = secret_key
         self._proxies = proxies
 
-    def get(self, table: str, dayplus: Optional[int], model: str, location: Polygon, time_range: Tuple[datetime, datetime]):
+    def get(
+        self,
+        table: str,
+        dayplus: Optional[int],
+        model: str,
+        location: Polygon,
+        time_range: Tuple[datetime, datetime],
+        tilt_range: Optional[Tuple[float, float]] = None,
+    ):
         """
         Args:
         - table (str): 数据表名
@@ -33,6 +48,7 @@ class Meteo:
         - model (str): 气象模型名
         - location (Polygon): 查询区域
         - time_range (Tuple[datetime, datetime]): 起止时间范围，包含起止时间
+        - tilt_range (Optional[Tuple[float, float]]): 倾角范围，设置为None代表不使用tilt进行筛选，否则使用倾角筛选，范围为闭区间，单位为度
 
         Returns:
         - dict: 查询结果
@@ -52,9 +68,17 @@ class Meteo:
             "start_t": time_range[0].astimezone().isoformat(),
             "end_t": time_range[1].astimezone().isoformat(),
         }
+        if tilt_range is not None:
+            body["tilt_range"] = tilt_range
         # 发送请求
-        authorization = generate_aksk_authorization(self._access_key, self._secret_key, {})
-        res = requests.post(self._server_url+"/api/meteo", json=body, headers={"Authorization": authorization})
+        authorization = generate_aksk_authorization(
+            self._access_key, self._secret_key, {}
+        )
+        res = requests.post(
+            self._server_url + "/api/meteo",
+            json=body,
+            headers={"Authorization": authorization},
+        )
         if res.status_code != 200:
             raise Exception(f"请求失败，状态码：{res.status_code}, 原因：{res.text}")
         data = res.json()["data"]
